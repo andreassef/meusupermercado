@@ -5,17 +5,21 @@
     android:id="@+id/adicionarNovoItem"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.AdicionarNovaLista">
+    tools:context=".activities.MainActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="138dp"
+        android:layout_marginTop="4dp"
         android:orientation="vertical"
         android:padding="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewItens"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.255">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -81,15 +85,15 @@
         android:background="@android:color/holo_blue_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.547" />
 
     <TextView
         android:id="@+id/textTotal"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
