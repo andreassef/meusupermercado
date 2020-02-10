@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.example.meusupermercado.R;
 import com.example.meusupermercado.adapter.ListaComprasAdapter;
+import com.example.meusupermercado.helper.ComprasDAO;
 import com.example.meusupermercado.model.Compras;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ListaComprasAdapter listaAdapter;
     private TextView textTotal;
 
-    private EditText editTipo, editItem, editQuantidade, editValor;
+    private EditText editItem, editQuantidade, editValor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         //Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         botaoInserir = findViewById(R.id.botaoInserir);
-        editTipo = findViewById(R.id.editTipo);
         editItem = findViewById(R.id.editItem);
         editQuantidade = findViewById(R.id.editQuantidade);
         editValor = findViewById(R.id.editValor);
@@ -52,29 +53,41 @@ public class MainActivity extends AppCompatActivity {
         botaoInserir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Objeto do CRUD
+                ComprasDAO comprasDAO = new ComprasDAO(getApplicationContext());
+
                 //conteudo
-                String tipo = editTipo.getText().toString();
                 String item = editItem.getText().toString();
                 int quantidade = Integer.parseInt(editQuantidade.getText().toString());
                 double valor = Double.parseDouble(editValor.getText().toString());
-                compras = new Compras(tipo, item, quantidade, valor);
-                comprasList.add(compras);
-                double total = 0;
-                for (Compras compras : comprasList){
-                    total = compras.getValor() + total;
-                    textTotal.setText(String.valueOf(total));
+
+                //validando campos
+                if(!(item.isEmpty() && String.valueOf(quantidade).isEmpty() && String.valueOf(valor).isEmpty())){
+                    compras = new Compras();
+                    compras.setItem(item);
+                    compras.setQuantidade(quantidade);
+                    compras.setValor(valor);
+                    if(comprasDAO.salvar(compras)){
+                        Toast.makeText(getApplicationContext(),"Sucesso ao salvar item!", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),"Erro ao salvar item!", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 onRestart();
             }
         });
     }
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
         carregarList();
     }
 
     private void carregarList(){
+        //listar produtos
+        ComprasDAO comprasDAO = new ComprasDAO(getApplicationContext());
+        comprasList = comprasDAO.listar();
         // RecyclerView
         listaAdapter = new ListaComprasAdapter(comprasList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -83,18 +96,4 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(listaAdapter);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_save:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

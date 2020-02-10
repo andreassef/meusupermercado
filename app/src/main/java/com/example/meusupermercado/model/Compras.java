@@ -3,24 +3,17 @@ package com.example.meusupermercado.model;
 import java.io.Serializable;
 
 public class Compras implements Serializable {
-    private String tipo;
+    private Long id;
     private String item;
     private int quantidade;
     private double valor;
 
-    public Compras(String tipo, String item, int quantidade, double valor) {
-        this.tipo = tipo;
-        this.item = item;
-        this.quantidade = quantidade;
-        this.valor = valor;
+    public Long getId() {
+        return id;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setId(Long tipo) {
+        this.id = id;
     }
 
     public String getItem() {

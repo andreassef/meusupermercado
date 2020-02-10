@@ -28,15 +28,6 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/editTipo"
-                android:layout_width="105dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="T"
-                android:inputType="textPersonName" />
-
-            <EditText
                 android:id="@+id/editItem"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"

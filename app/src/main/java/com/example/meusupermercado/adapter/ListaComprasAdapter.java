@@ -30,7 +30,6 @@ public class ListaComprasAdapter extends RecyclerView.Adapter<ListaComprasAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Compras compras = comprasList.get(position);
-        holder.tipo.setText(compras.getTipo());
         holder.item.setText(compras.getItem());
         holder.quantidade.setText(String.valueOf(compras.getQuantidade()));
         holder.valor.setText(String.valueOf(compras.getValor()));
@@ -42,11 +41,10 @@ public class ListaComprasAdapter extends RecyclerView.Adapter<ListaComprasAdapte
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView tipo, item, quantidade, valor;
+        TextView item, quantidade, valor;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            tipo = itemView.findViewById(R.id.textTipo);
             item = itemView.findViewById(R.id.textItem);
             quantidade = itemView.findViewById(R.id.textQuantidade);
             valor = itemView.findViewById(R.id.textValor);

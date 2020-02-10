@@ -6,16 +6,6 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/textTipo"
-        android:layout_width="30dp"
-        android:layout_height="25dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="14sp"
-        android:visibility="visible" />
-
-    <TextView
         android:id="@+id/textItem"
         android:layout_width="110dp"
         android:layout_height="25dp"
