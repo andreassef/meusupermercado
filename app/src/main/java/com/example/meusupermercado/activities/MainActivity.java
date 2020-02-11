@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.example.meusupermercado.R;
 import com.example.meusupermercado.adapter.ListaComprasAdapter;
 import com.example.meusupermercado.helper.ComprasDAO;
+import com.example.meusupermercado.helper.RecyclerItemClickListener;
 import com.example.meusupermercado.model.Compras;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -74,9 +76,30 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"Erro ao salvar item!", Toast.LENGTH_SHORT).show();
                     }
                 }
-                onRestart();
+                onResume();
             }
         });
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
+                recyclerView,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(MainActivity.this, ActivityEditItem.class);
+                        startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    }
+                }));
     }
     @Override
     protected void onResume() {

@@ -29,10 +29,10 @@ public class ComprasDAO implements ICompras {
             cv.put("quantidade", compras.getQuantidade());
             cv.put("valor", compras.getValor());
             escreve.insert(DbHelper.NOME_TABELA, null, cv);
-            Log.i("INFO", "Tarefa salva com sucesso!");
+            Log.i("INFO", "Item salva com sucesso!");
 
         }catch (Exception e){
-            Log.e("INFO", "Erro ao Salvar tarefa " + e.getMessage());
+            Log.e("INFO", "Erro ao Salvar item" + e.getMessage());
             return false;
         }
         return true;
@@ -40,7 +40,20 @@ public class ComprasDAO implements ICompras {
 
     @Override
     public boolean atualizar(Compras compras) {
-        return false;
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("item", compras.getItem());
+            cv.put("quantidade", compras.getQuantidade());
+            cv.put("valor", compras.getValor());
+            String[] args = {compras.getId().toString()};
+            escreve.update(DbHelper.NOME_TABELA, cv, "id=?", args);
+            Log.i("INFO", "Item atualizado com sucesso!");
+
+        }catch (Exception e){
+            Log.i("INFO", "Erro ao atualizar  item! " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override
