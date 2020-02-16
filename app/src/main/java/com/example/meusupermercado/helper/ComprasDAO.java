@@ -40,15 +40,14 @@ public class ComprasDAO implements ICompras {
 
     @Override
     public boolean atualizar(Compras compras) {
+        ContentValues cv = new ContentValues();
+        cv.put("item", compras.getItem());
+        cv.put("quantidade", compras.getQuantidade());
+        cv.put("valor", compras.getValor());
         try {
-            ContentValues cv = new ContentValues();
-            cv.put("item", compras.getItem());
-            cv.put("quantidade", compras.getQuantidade());
-            cv.put("valor", compras.getValor());
             String[] args = {compras.getId().toString()};
-            escreve.update(DbHelper.NOME_TABELA, cv, "id=?", args);
+            escreve.update(DbHelper.NOME_TABELA, cv, "id=?",args);
             Log.i("INFO", "Item atualizado com sucesso!");
-
         }catch (Exception e){
             Log.i("INFO", "Erro ao atualizar  item! " + e.getMessage());
             return false;

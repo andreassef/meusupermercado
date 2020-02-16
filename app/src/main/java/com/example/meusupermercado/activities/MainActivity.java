@@ -8,17 +8,11 @@ import com.example.meusupermercado.adapter.ListaComprasAdapter;
 import com.example.meusupermercado.helper.ComprasDAO;
 import com.example.meusupermercado.helper.RecyclerItemClickListener;
 import com.example.meusupermercado.model.Compras;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -36,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ListaComprasAdapter listaAdapter;
     private TextView textTotal;
+
 
     private EditText editItem, editQuantidade, editValor;
 
@@ -55,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
         botaoInserir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Objeto do CRUD
                 ComprasDAO comprasDAO = new ComprasDAO(getApplicationContext());
-
                 //conteudo
                 String item = editItem.getText().toString();
                 int quantidade = Integer.parseInt(editQuantidade.getText().toString());
@@ -85,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        Compras compraSelecionada = comprasList.get(position);
                         Intent intent = new Intent(MainActivity.this, ActivityEditItem.class);
+                        intent.putExtra("item", compraSelecionada);
                         startActivity(intent);
 
                     }
@@ -108,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void carregarList(){
-        //listar produtos
         ComprasDAO comprasDAO = new ComprasDAO(getApplicationContext());
+        //listar produtos
         comprasList = comprasDAO.listar();
         // RecyclerView
         listaAdapter = new ListaComprasAdapter(comprasList);
@@ -118,5 +113,4 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(listaAdapter);
     }
-
 }

@@ -32,7 +32,7 @@ public class ListaComprasAdapter extends RecyclerView.Adapter<ListaComprasAdapte
         Compras compras = comprasList.get(position);
         holder.item.setText(compras.getItem());
         holder.quantidade.setText(String.valueOf(compras.getQuantidade()));
-        holder.valor.setText(String.valueOf(compras.getValor()));
+        holder.valor.setText(String.valueOf(compras.total()));
     }
 
     @Override

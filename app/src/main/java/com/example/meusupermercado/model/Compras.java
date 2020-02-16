@@ -33,10 +33,14 @@ public class Compras implements Serializable {
     }
 
     public double getValor() {
-        return getQuantidade() * valor;
+        return valor;
     }
 
     public void setValor(double valor) {
         this.valor = valor;
+    }
+
+    public double total(){
+        return getValor()*getQuantidade();
     }
 }
