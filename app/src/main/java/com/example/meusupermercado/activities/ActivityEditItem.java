@@ -3,6 +3,7 @@ package com.example.meusupermercado.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,11 +31,12 @@ public class ActivityEditItem extends AppCompatActivity {
         btSalvar = findViewById(R.id.btSalvar);
 
         //recuperar dados de outra atividade
-        compras = (Compras) getIntent().getSerializableExtra("item");
+        compras = (Compras) getIntent().getSerializableExtra("itemEdit");
         if(compras != null){
             editItem.setText(compras.getItem());
             editQuantidade.setText(String.valueOf(compras.getQuantidade()));
             editValor.setText(String.valueOf(compras.getValor()));
+            Log.i("Espia so", "O id do item é: " + compras.getId());
         }
 
         btSalvar.setOnClickListener(new View.OnClickListener() {

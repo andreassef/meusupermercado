@@ -57,7 +57,15 @@ public class ComprasDAO implements ICompras {
 
     @Override
     public boolean deletar(Compras compras) {
-        return false;
+        try {
+            String[] args = {compras.getId().toString()};
+            escreve.delete(DbHelper.NOME_TABELA, "id=?", args);
+            Log.i("INFO", "Item removida com sucesso!");
+        }catch (Exception e){
+            Log.i("INFO", "Erro ao remover item: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override

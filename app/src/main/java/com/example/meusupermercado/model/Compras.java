@@ -12,7 +12,7 @@ public class Compras implements Serializable {
         return id;
     }
 
-    public void setId(Long tipo) {
+    public void setId(Long id) {
         this.id = id;
     }
 

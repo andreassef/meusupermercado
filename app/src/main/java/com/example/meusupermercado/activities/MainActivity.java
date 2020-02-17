@@ -1,5 +1,6 @@
 package com.example.meusupermercado.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import com.example.meusupermercado.helper.ComprasDAO;
 import com.example.meusupermercado.helper.RecyclerItemClickListener;
 import com.example.meusupermercado.model.Compras;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ListaComprasAdapter listaAdapter;
     private TextView textTotal;
-
+    private ComprasDAO comprasDAO;
 
     private EditText editItem, editQuantidade, editValor;
 
@@ -50,12 +53,16 @@ public class MainActivity extends AppCompatActivity {
         botaoInserir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ComprasDAO comprasDAO = new ComprasDAO(getApplicationContext());
                 //conteudo
                 String item = editItem.getText().toString();
                 int quantidade = Integer.parseInt(editQuantidade.getText().toString());
                 double valor = Double.parseDouble(editValor.getText().toString());
 
+                comprasDAO = new ComprasDAO(getApplicationContext());
+
+                if(item == "" || String.valueOf(quantidade) == "" || String.valueOf(valor) == ""){
+                    Toast.makeText(getApplicationContext(),"Preencha os campos!", Toast.LENGTH_SHORT).show();
+                }
                 //validando campos
                 if(!(item.isEmpty() && String.valueOf(quantidade).isEmpty() && String.valueOf(valor).isEmpty())){
                     compras = new Compras();
@@ -65,11 +72,11 @@ public class MainActivity extends AppCompatActivity {
                     if(comprasDAO.salvar(compras)){
                         Toast.makeText(getApplicationContext(),"Sucesso ao salvar item!", Toast.LENGTH_SHORT).show();
                     }
-                    else {
-                        Toast.makeText(getApplicationContext(),"Erro ao salvar item!", Toast.LENGTH_SHORT).show();
-                    }
                 }
-                onResume();
+                onStart();
+                editItem.setText("");
+                editQuantidade.setText("");
+                editValor.setText("");
             }
         });
 
@@ -80,30 +87,45 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         Compras compraSelecionada = comprasList.get(position);
                         Intent intent = new Intent(MainActivity.this, ActivityEditItem.class);
-                        intent.putExtra("item", compraSelecionada);
+                        intent.putExtra("itemEdit", compraSelecionada);
                         startActivity(intent);
-
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
+                        //recuper item para deletar
+                        compras = comprasList.get(position);
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                        //configura título e mensagem
+                        dialog.setTitle("Confirmar exclusão");
+                        dialog.setMessage("Tem certeza que deseja excluir este item?");
 
+                        dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                comprasDAO = new ComprasDAO(getApplicationContext());
+                                if(comprasDAO.deletar(compras)){
+                                    carregarList();
+                                    Toast.makeText(getApplicationContext(),"Sucesso ao excluir item!", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"Erro ao excluir item!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        dialog.setNegativeButton("Não", null);
+
+                        dialog.create();
+                        dialog.show();
                     }
 
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                     }
                 }));
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        carregarList();
-    }
 
-    private void carregarList(){
-        ComprasDAO comprasDAO = new ComprasDAO(getApplicationContext());
+    public void carregarList(){
+        comprasDAO = new ComprasDAO(getApplicationContext());
         //listar produtos
         comprasList = comprasDAO.listar();
         // RecyclerView
@@ -112,5 +134,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(listaAdapter);
+    }
+
+    @Override
+    protected void onStart() {
+        carregarList();
+        super.onStart();
     }
 }
