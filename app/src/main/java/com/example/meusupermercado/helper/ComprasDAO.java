@@ -68,6 +68,17 @@ public class ComprasDAO implements ICompras {
         return true;
     }
 
+    public boolean deletarTudo(){
+        try {
+            escreve.delete(DbHelper.NOME_TABELA, null, null);
+            Log.i("INFO", "Item removida com sucesso!");
+        }catch (Exception e){
+            Log.i("INFO", "Erro ao remover item: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public List<Compras> listar() {
         List<Compras> listaCompras = new ArrayList<>();

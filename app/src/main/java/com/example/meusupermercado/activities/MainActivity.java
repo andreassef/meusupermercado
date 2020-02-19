@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private Button botaoInserir;
+    private Button botaoInserir, botaoNovaLista;
     private List<Compras> comprasList = new ArrayList<>();
     private Compras compras;
     private RecyclerView recyclerView;
@@ -37,13 +37,19 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText editItem, editQuantidade, editValor;
 
+    //itens
+    private String item;
+    private int quantidade;
+    private double valor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_nova_lista);
         //Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
-        botaoInserir = findViewById(R.id.botaoInserir);
+        botaoInserir = findViewById(R.id.btInserir);
+        botaoNovaLista = findViewById(R.id.bt_nova_lista);
         editItem = findViewById(R.id.editItem);
         editQuantidade = findViewById(R.id.editQuantidade);
         editValor = findViewById(R.id.editValor);
@@ -54,29 +60,51 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //conteudo
-                String item = editItem.getText().toString();
-                int quantidade = Integer.parseInt(editQuantidade.getText().toString());
-                double valor = Double.parseDouble(editValor.getText().toString());
+                item = editItem.getText().toString();
+                quantidade = Integer.parseInt(editQuantidade.getText().toString());
+                valor = Double.parseDouble(editValor.getText().toString());
 
-                comprasDAO = new ComprasDAO(getApplicationContext());
-
-                if(item == "" || String.valueOf(quantidade) == "" || String.valueOf(valor) == ""){
-                    Toast.makeText(getApplicationContext(),"Preencha os campos!", Toast.LENGTH_SHORT).show();
-                }
                 //validando campos
-                if(!(item.isEmpty() && String.valueOf(quantidade).isEmpty() && String.valueOf(valor).isEmpty())){
+                if (!(item.isEmpty() && String.valueOf(quantidade).isEmpty() && String.valueOf(valor).isEmpty())) {
+                    comprasDAO = new ComprasDAO(getApplicationContext());
                     compras = new Compras();
                     compras.setItem(item);
                     compras.setQuantidade(quantidade);
                     compras.setValor(valor);
-                    if(comprasDAO.salvar(compras)){
-                        Toast.makeText(getApplicationContext(),"Sucesso ao salvar item!", Toast.LENGTH_SHORT).show();
+
+                    if (comprasDAO.salvar(compras)) {
+                        Toast.makeText(getApplicationContext(), "Sucesso ao salvar item!", Toast.LENGTH_SHORT).show();
+                        onStart();
+                        editItem.setText("");
+                        editQuantidade.setText("");
+                        editValor.setText("");
                     }
                 }
-                onStart();
-                editItem.setText("");
-                editQuantidade.setText("");
-                editValor.setText("");
+            }
+        });
+
+        botaoNovaLista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                //configura título e mensagem
+                dialog.setTitle("Nova lista");
+                dialog.setMessage("Deseja criar uma nova lista?");
+                dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        comprasDAO = new ComprasDAO(getApplicationContext());
+                        if(comprasDAO.deletarTudo()){
+                            carregarList();
+                            Toast.makeText(getApplicationContext(),"Sucesso ao criar nova lista!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Erro ao criar nova lista!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                dialog.setNegativeButton("Não", null);
+                dialog.create();
+                dialog.show();
             }
         });
 
@@ -134,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(listaAdapter);
+        double cont = 0;
+        for(Compras compras : comprasList){
+            cont = compras.total() + cont;
+        }
+        textTotal.setText(String.valueOf(cont));
     }
 
     @Override
