@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#66b19c</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="corprincipal">#82269E</color>
+    <color name="corprincipal">#66B19C</color>
+    <color name="VermelhoApp">#A51818</color>
 </resources>

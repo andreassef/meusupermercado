@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     //itens
     private String item;
-    private int quantidade;
-    private double valor;
+    private String quantidade;
+    private String valor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,32 +56,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewItens);
         textTotal = findViewById(R.id.textTotal);
 
-        botaoInserir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //conteudo
-                item = editItem.getText().toString();
-                quantidade = Integer.parseInt(editQuantidade.getText().toString());
-                valor = Double.parseDouble(editValor.getText().toString());
-
-                //validando campos
-                if (!(item.isEmpty() && String.valueOf(quantidade).isEmpty() && String.valueOf(valor).isEmpty())) {
-                    comprasDAO = new ComprasDAO(getApplicationContext());
-                    compras = new Compras();
-                    compras.setItem(item);
-                    compras.setQuantidade(quantidade);
-                    compras.setValor(valor);
-
-                    if (comprasDAO.salvar(compras)) {
-                        Toast.makeText(getApplicationContext(), "Sucesso ao salvar item!", Toast.LENGTH_SHORT).show();
-                        onStart();
-                        editItem.setText("");
-                        editQuantidade.setText("");
-                        editValor.setText("");
-                    }
-                }
-            }
-        });
 
         botaoNovaLista.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,5 +147,38 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         carregarList();
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        botaoInserir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //conteudo
+                item = editItem.getText().toString();
+                quantidade = editQuantidade.getText().toString();
+                valor = editValor.getText().toString();
+
+                //validando campos
+                if (!(item.isEmpty() || quantidade.isEmpty() || valor.isEmpty())) {
+                    comprasDAO = new ComprasDAO(getApplicationContext());
+                    compras = new Compras();
+                    compras.setItem(item);
+                    compras.setQuantidade(Integer.parseInt(quantidade));
+                    compras.setValor(Double.parseDouble(valor));
+
+                    if (comprasDAO.salvar(compras)) {
+                        Toast.makeText(getApplicationContext(), "Sucesso ao salvar item!", Toast.LENGTH_SHORT).show();
+                        onStart();
+                        editItem.setText("");
+                        editQuantidade.setText("");
+                        editValor.setText("");
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(), "Preencha os campos!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        super.onResume();
     }
 }
