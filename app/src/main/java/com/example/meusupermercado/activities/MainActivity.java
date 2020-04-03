@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         for(Compras compras : comprasList){
             cont = compras.total() + cont;
         }
-        textTotal.setText(String.valueOf(cont));
+        textTotal.setText(String.format("%.2f",cont));
     }
 
     @Override
